@@ -3,7 +3,15 @@ name = "semantic-router"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 dependencies = [
+    "datasets>=4.4.1",
+    "google-genai>=1.53.0",
+    "groq>=0.37.0",
+    "huggingface-hub>=1.1.7",
+    "instructor>=1.13.0",
+    "jsonref>=1.1.0",
     "pydantic>=2.12.5",
+    "python-dotenv>=1.2.1",
+    "tqdm>=4.67.1",
 ]

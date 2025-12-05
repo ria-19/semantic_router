@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+env/
+venv/
+
+# Environment Variables (NEVER COMMIT THESE)
+.env
+.env.local
+
+# Data (Too big for git, usually)
+data/raw/
+data/processed/
+# Note: You might want to commit a small sample, but not the full dataset if it's huge. 
+# For this project, the dataset is small (~1MB), so you CAN commit it if you want history.
+# If you want to commit data, remove the lines above.
+
+# Output/Logs
+outputs/
+logs/
+*.log
+wandb/
+
+# Models
+*.gguf
+lora_model/
+models/
