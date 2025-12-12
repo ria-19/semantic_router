@@ -2,7 +2,35 @@
 Configuration settings for the Synthetic Data Generator.
 """
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+from pydantic import ConfigDict
 
+# 1. LOAD ENV VARS
+load_dotenv()
+
+# 2. PATHS
+BASE_DIR = Path(__file__).resolve().parents[1]
+DATA_DIR = BASE_DIR / "data"
+RAW_DATA_DIR = DATA_DIR / "raw"
+PROCESSED_DATA_DIR = DATA_DIR / "processed"
+LOG_DIR = BASE_DIR / "logs"
+
+# Ensure directories exist
+RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
+PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+# =============================================================================
+# API KEYS & MODELS
+# =============================================================================
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+
+if not GROQ_API_KEY and not GOOGLE_API_KEY:
+    print("WARNING: No API Keys found in .env (GROQ_API_KEY or GOOGLE_API_KEY)")
+    
 # =============================================================================
 # MODEL CONFIGURATION
 # =============================================================================
@@ -410,5 +438,46 @@ QUERY_STYLES = {
         "examples": ["How do I undo this?", "Rollback the deployment", "Revert to previous config"]
     }
 }
+
+# --- THE SINGLE SOURCE OF TRUTH ---
+SYSTEM_PROMPT = """You are the Semantic Brain of an autonomous AI engineer.
+Your role is to route user queries to the correct tool or answer directly.
+
+OUTPUT RULES:
+1. If the user asks a question you can answer with general knowledge, return status="complete".
+2. If the user asks for a specific action (search, file edit, debug), return status="running" and choose the tool.
+3. If the request is ambiguous or impossible, return status="running" and use the 'ask_human' tool.
+4. Output STRICT JSON only. No markdown, no yapping."""
+
+# --- Shared Config ---
+# This tells Pydantic: "If OpenAI/Google adds extra fields like 'type' or 'ref', ignore them."
+BASE_CONFIG = ConfigDict(extra="ignore")
+
+# --- VALIDATION CONFIGURATION ---
+VALIDATION_CONFIG = {
+    # Quality Checks
+    "MIN_QUERY_LENGTH": int(os.getenv("MIN_QUERY_LENGTH", 5)),
+    "MIN_THOUGHT_WORDS": int(os.getenv("MIN_THOUGHT_WORDS", 8)),
+    "MAX_THOUGHT_WORDS": int(os.getenv("MAX_THOUGHT_WORDS", 100)),
+    "MIN_FINAL_ANSWER_LENGTH": int(os.getenv("MIN_FINAL_ANSWER_LENGTH", 10)),
+    "PARROTING_THRESHOLD": float(os.getenv("PARROTING_THRESHOLD", 0.8)),
+    
+    # Domain Checks
+    "MIN_SEARCH_QUERY_LENGTH": int(os.getenv("MIN_SEARCH_QUERY_LENGTH", 2)),
+    "MAX_FILE_SIZE_KB": int(os.getenv("MAX_FILE_SIZE_KB", 512)),
+    
+    # Batching and Retry
+    "GENERATION_BATCH_SIZE": int(os.getenv("GENERATION_BATCH_SIZE", 5)),
+    "MAX_GENERATION_RETRIES": int(os.getenv("MAX_GENERATION_RETRIES", 4)),
+}
+
+TOTAL_TARGET = 20
+
+
+# ----------------------------------------------------
+# CONFIGURATION FOR HUGGINGFACE
+# ----------------------------------------------------
+
+HF_USERNAME = "tai-tai-sama"
 
 

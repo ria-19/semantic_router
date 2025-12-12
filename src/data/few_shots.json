@@ -1,0 +1,134 @@
+{
+    "codebase_search": [
+        {
+            "user_query": "Where is the User class defined?",
+            "output": {
+                "status": "running",
+                "thought": "User is looking for a specific class definition, so I'll use exact mode to find the symbol precisely in the codebase.",
+                "tool_use": {
+                    "tool_name": "codebase_search",
+                    "arguments": {
+                        "query": "class User",
+                        "mode": "exact"
+                    }
+                }
+            }
+        },
+        {
+            "user_query": "How do we handle authentication failures?",
+            "output": {
+                "status": "running",
+                "thought": "This is a conceptual question about auth error handling, so I'll use semantic search to find relevant logic across the codebase.",
+                "tool_use": {
+                    "tool_name": "codebase_search",
+                    "arguments": {
+                        "query": "authentication failure handling",
+                        "mode": "semantic"
+                    }
+                }
+            }
+        },
+        {
+            "user_query": "Find all test cases for the payment module",
+            "output": {
+                "status": "running",
+                "thought": "User specifically mentioned tests, so I'll search with a file pattern to scope the results to test directories only.",
+                "tool_use": {
+                    "tool_name": "codebase_search",
+                    "arguments": {
+                        "query": "payment test cases",
+                        "mode": "hybrid",
+                        "file_pattern": "tests/**/*.py"
+                    }
+                }
+            }
+        }
+    ],
+    "file_manager": [
+        {
+            "user_query": "Show me what's in src/config.py",
+            "output": {
+                "status": "running",
+                "thought": "User specified the exact file path, so I'll use file_manager to read the contents of src/config.py directly.",
+                "tool_use": {
+                    "tool_name": "file_manager",
+                    "arguments": {
+                        "operation": "read",
+                        "path": "src/config.py"
+                    }
+                }
+            }
+        },
+        {
+            "user_query": "Change the timeout from 30 to 60 in backend/api/client.py",
+            "output": {
+                "status": "running",
+                "thought": "User wants to modify a specific value in a known file, so I'll use patch operation to replace the timeout value.",
+                "tool_use": {
+                    "tool_name": "file_manager",
+                    "arguments": {
+                        "operation": "patch",
+                        "path": "backend/api/client.py",
+                        "target_string": "timeout = 30",
+                        "replacement_string": "timeout = 60"
+                    }
+                }
+            }
+        }
+    ],
+    "sandbox_exec": [
+        {
+            "user_query": "Test if this regex works: ^[a-z]+@[a-z]+\\..+$",
+            "output": {
+                "status": "running",
+                "thought": "User wants to validate a regex pattern, so I'll execute it in the sandbox with test cases to verify it works correctly.",
+                "tool_use": {
+                    "tool_name": "sandbox_exec",
+                    "arguments": {
+                        "code": "import re\npattern = r'^[a-z]+@[a-z]+\\..+$'\ntest_cases = ['test@example.com', 'invalid', 'Test@example.com']\nfor case in test_cases:\n    print(f'{case}: {bool(re.match(pattern, case))}')",
+                        "timeout": 30
+                    }
+                }
+            }
+        }
+    ],
+    "ask_human": [
+        {
+            "user_query": "Drop the users table from the database",
+            "output": {
+                "status": "running",
+                "thought": "This is a destructive database operation that could cause data loss, so I need explicit human confirmation before proceeding.",
+                "tool_use": {
+                    "tool_name": "ask_human",
+                    "arguments": {
+                        "question": "This will permanently delete all user data. Are you sure you want to drop the users table?",
+                        "context": "Dropping tables is irreversible and may affect production systems."
+                    }
+                }
+            }
+        },
+        {
+            "user_query": "Deploy the new feature",
+            "output": {
+                "status": "running",
+                "thought": "The request is ambiguous because there are multiple deployment environments, so I need clarification on which environment to target.",
+                "tool_use": {
+                    "tool_name": "ask_human",
+                    "arguments": {
+                        "question": "Which environment should I deploy to: staging, production, or development?",
+                        "context": "Need to know target environment before proceeding with deployment."
+                    }
+                }
+            }
+        }
+    ],
+    "direct_answer": [
+        {
+            "user_query": "What's the difference between async and await in Python?",
+            "output": {
+                "status": "complete",
+                "final_answer": "In Python, 'async' defines a coroutine function that can be paused and resumed, while 'await' is used inside async functions to pause execution until an awaitable object completes. Together, they enable asynchronous programming for I/O-bound operations."
+            }
+        }
+    ]
+}

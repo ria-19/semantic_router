@@ -1,28 +1,58 @@
-# Python
+# --- Python Standard ---
 __pycache__/
 *.py[cod]
+*.so
+.Python
+
+# --- Virtual Environments ---
 .venv/
 env/
 venv/
+ENV/
 
-# Environment Variables (NEVER COMMIT THESE)
+# --- Dependency Management ---
+# Keep uv.lock and pyproject.toml! But ignore local caches if they appear.
+.uv/
+
+# --- Environment Variables (CRITICAL) ---
 .env
 .env.local
+.env.*
 
-# Data (Too big for git, usually)
+# --- OS / IDE Junk (Mac & VS Code) ---
+.DS_Store
+.vscode/
+.idea/
+
+# --- Jupyter Notebooks ---
+.ipynb_checkpoints/
+# Optional: Ignore all outputs in notebooks if you use jupytext, 
+# but usually we commit .ipynb files themselves.
+
+# --- Data (Since you synced to Hugging Face, keep local clean) ---
 data/raw/
 data/processed/
-# Note: You might want to commit a small sample, but not the full dataset if it's huge. 
-# For this project, the dataset is small (~1MB), so you CAN commit it if you want history.
-# If you want to commit data, remove the lines above.
+data/temp/
 
-# Output/Logs
+# --- Logs & Outputs ---
 outputs/
 logs/
 *.log
 wandb/
 
-# Models
+# --- Testing & Type Checking ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# --- Models & Weights ---
 *.gguf
+*.pt
+*.pth
+*.bin
+*.safetensors
 lora_model/
 models/
+adapter_model/
